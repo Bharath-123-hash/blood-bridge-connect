@@ -9,8 +9,32 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RequestRouteImport } from './routes/request'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as DonorsRouteImport } from './routes/donors'
+import { Route as AlertRouteImport } from './routes/alert'
 import { Route as IndexRouteImport } from './routes/index'
 
+const RequestRoute = RequestRouteImport.update({
+  id: '/request',
+  path: '/request',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DonorsRoute = DonorsRouteImport.update({
+  id: '/donors',
+  path: '/donors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AlertRoute = AlertRouteImport.update({
+  id: '/alert',
+  path: '/alert',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +43,72 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/alert': typeof AlertRoute
+  '/donors': typeof DonorsRoute
+  '/profile': typeof ProfileRoute
+  '/request': typeof RequestRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/alert': typeof AlertRoute
+  '/donors': typeof DonorsRoute
+  '/profile': typeof ProfileRoute
+  '/request': typeof RequestRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/alert': typeof AlertRoute
+  '/donors': typeof DonorsRoute
+  '/profile': typeof ProfileRoute
+  '/request': typeof RequestRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/alert' | '/donors' | '/profile' | '/request'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/alert' | '/donors' | '/profile' | '/request'
+  id: '__root__' | '/' | '/alert' | '/donors' | '/profile' | '/request'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AlertRoute: typeof AlertRoute
+  DonorsRoute: typeof DonorsRoute
+  ProfileRoute: typeof ProfileRoute
+  RequestRoute: typeof RequestRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/request': {
+      id: '/request'
+      path: '/request'
+      fullPath: '/request'
+      preLoaderRoute: typeof RequestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/donors': {
+      id: '/donors'
+      path: '/donors'
+      fullPath: '/donors'
+      preLoaderRoute: typeof DonorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/alert': {
+      id: '/alert'
+      path: '/alert'
+      fullPath: '/alert'
+      preLoaderRoute: typeof AlertRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,16 +121,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AlertRoute: AlertRoute,
+  DonorsRoute: DonorsRoute,
+  ProfileRoute: ProfileRoute,
+  RequestRoute: RequestRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
