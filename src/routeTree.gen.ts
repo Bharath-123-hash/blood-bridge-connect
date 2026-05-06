@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as RequestRouteImport } from './routes/request'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as DonorsRouteImport } from './routes/donors'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AlertRouteImport } from './routes/alert'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -30,6 +31,11 @@ const DonorsRoute = DonorsRouteImport.update({
   path: '/donors',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AlertRoute = AlertRouteImport.update({
   id: '/alert',
   path: '/alert',
@@ -44,6 +50,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alert': typeof AlertRoute
+  '/auth': typeof AuthRoute
   '/donors': typeof DonorsRoute
   '/profile': typeof ProfileRoute
   '/request': typeof RequestRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alert': typeof AlertRoute
+  '/auth': typeof AuthRoute
   '/donors': typeof DonorsRoute
   '/profile': typeof ProfileRoute
   '/request': typeof RequestRoute
@@ -59,21 +67,30 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/alert': typeof AlertRoute
+  '/auth': typeof AuthRoute
   '/donors': typeof DonorsRoute
   '/profile': typeof ProfileRoute
   '/request': typeof RequestRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/alert' | '/donors' | '/profile' | '/request'
+  fullPaths: '/' | '/alert' | '/auth' | '/donors' | '/profile' | '/request'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/alert' | '/donors' | '/profile' | '/request'
-  id: '__root__' | '/' | '/alert' | '/donors' | '/profile' | '/request'
+  to: '/' | '/alert' | '/auth' | '/donors' | '/profile' | '/request'
+  id:
+    | '__root__'
+    | '/'
+    | '/alert'
+    | '/auth'
+    | '/donors'
+    | '/profile'
+    | '/request'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlertRoute: typeof AlertRoute
+  AuthRoute: typeof AuthRoute
   DonorsRoute: typeof DonorsRoute
   ProfileRoute: typeof ProfileRoute
   RequestRoute: typeof RequestRoute
@@ -102,6 +119,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DonorsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/alert': {
       id: '/alert'
       path: '/alert'
@@ -122,6 +146,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlertRoute: AlertRoute,
+  AuthRoute: AuthRoute,
   DonorsRoute: DonorsRoute,
   ProfileRoute: ProfileRoute,
   RequestRoute: RequestRoute,
@@ -129,3 +154,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
