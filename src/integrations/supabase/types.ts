@@ -14,7 +14,134 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      donor_responses: {
+        Row: {
+          created_at: string
+          donor_id: string
+          id: string
+          request_id: string
+          status: Database["public"]["Enums"]["response_status"]
+        }
+        Insert: {
+          created_at?: string
+          donor_id: string
+          id?: string
+          request_id: string
+          status: Database["public"]["Enums"]["response_status"]
+        }
+        Update: {
+          created_at?: string
+          donor_id?: string
+          id?: string
+          request_id?: string
+          status?: Database["public"]["Enums"]["response_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "donor_responses_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "emergency_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emergency_requests: {
+        Row: {
+          area: string | null
+          blood_group: Database["public"]["Enums"]["blood_group"]
+          contact_name: string | null
+          contact_phone: string | null
+          created_at: string
+          hospital: string
+          id: string
+          lat: number | null
+          lng: number | null
+          patient_info: string | null
+          requester_id: string
+          status: Database["public"]["Enums"]["request_status"]
+          units: number
+          urgency: Database["public"]["Enums"]["urgency_level"]
+        }
+        Insert: {
+          area?: string | null
+          blood_group: Database["public"]["Enums"]["blood_group"]
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          hospital: string
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          patient_info?: string | null
+          requester_id: string
+          status?: Database["public"]["Enums"]["request_status"]
+          units?: number
+          urgency?: Database["public"]["Enums"]["urgency_level"]
+        }
+        Update: {
+          area?: string | null
+          blood_group?: Database["public"]["Enums"]["blood_group"]
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          hospital?: string
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          patient_info?: string | null
+          requester_id?: string
+          status?: Database["public"]["Enums"]["request_status"]
+          units?: number
+          urgency?: Database["public"]["Enums"]["urgency_level"]
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          area: string | null
+          available: boolean
+          blood_group: Database["public"]["Enums"]["blood_group"] | null
+          created_at: string
+          donation_count: number
+          id: string
+          last_donation_date: string | null
+          lat: number | null
+          lng: number | null
+          name: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          area?: string | null
+          available?: boolean
+          blood_group?: Database["public"]["Enums"]["blood_group"] | null
+          created_at?: string
+          donation_count?: number
+          id: string
+          last_donation_date?: string | null
+          lat?: number | null
+          lng?: number | null
+          name?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          area?: string | null
+          available?: boolean
+          blood_group?: Database["public"]["Enums"]["blood_group"] | null
+          created_at?: string
+          donation_count?: number
+          id?: string
+          last_donation_date?: string | null
+          lat?: number | null
+          lng?: number | null
+          name?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +150,10 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      blood_group: "A+" | "A-" | "B+" | "B-" | "O+" | "O-" | "AB+" | "AB-"
+      request_status: "open" | "fulfilled" | "cancelled"
+      response_status: "accepted" | "declined"
+      urgency_level: "Critical" | "High" | "Moderate"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +280,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      blood_group: ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"],
+      request_status: ["open", "fulfilled", "cancelled"],
+      response_status: ["accepted", "declined"],
+      urgency_level: ["Critical", "High", "Moderate"],
+    },
   },
 } as const
