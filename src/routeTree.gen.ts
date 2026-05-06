@@ -13,8 +13,8 @@ import { Route as RequestRouteImport } from './routes/request'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as DonorsRouteImport } from './routes/donors'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AlertRouteImport } from './routes/alert'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AlertIdRouteImport } from './routes/alert.$id'
 
 const RequestRoute = RequestRouteImport.update({
   id: '/request',
@@ -36,64 +36,64 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AlertRoute = AlertRouteImport.update({
-  id: '/alert',
-  path: '/alert',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AlertIdRoute = AlertIdRouteImport.update({
+  id: '/alert/$id',
+  path: '/alert/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/alert': typeof AlertRoute
   '/auth': typeof AuthRoute
   '/donors': typeof DonorsRoute
   '/profile': typeof ProfileRoute
   '/request': typeof RequestRoute
+  '/alert/$id': typeof AlertIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/alert': typeof AlertRoute
   '/auth': typeof AuthRoute
   '/donors': typeof DonorsRoute
   '/profile': typeof ProfileRoute
   '/request': typeof RequestRoute
+  '/alert/$id': typeof AlertIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/alert': typeof AlertRoute
   '/auth': typeof AuthRoute
   '/donors': typeof DonorsRoute
   '/profile': typeof ProfileRoute
   '/request': typeof RequestRoute
+  '/alert/$id': typeof AlertIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/alert' | '/auth' | '/donors' | '/profile' | '/request'
+  fullPaths: '/' | '/auth' | '/donors' | '/profile' | '/request' | '/alert/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/alert' | '/auth' | '/donors' | '/profile' | '/request'
+  to: '/' | '/auth' | '/donors' | '/profile' | '/request' | '/alert/$id'
   id:
     | '__root__'
     | '/'
-    | '/alert'
     | '/auth'
     | '/donors'
     | '/profile'
     | '/request'
+    | '/alert/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AlertRoute: typeof AlertRoute
   AuthRoute: typeof AuthRoute
   DonorsRoute: typeof DonorsRoute
   ProfileRoute: typeof ProfileRoute
   RequestRoute: typeof RequestRoute
+  AlertIdRoute: typeof AlertIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -126,13 +126,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/alert': {
-      id: '/alert'
-      path: '/alert'
-      fullPath: '/alert'
-      preLoaderRoute: typeof AlertRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -140,17 +133,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/alert/$id': {
+      id: '/alert/$id'
+      path: '/alert/$id'
+      fullPath: '/alert/$id'
+      preLoaderRoute: typeof AlertIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AlertRoute: AlertRoute,
   AuthRoute: AuthRoute,
   DonorsRoute: DonorsRoute,
   ProfileRoute: ProfileRoute,
   RequestRoute: RequestRoute,
+  AlertIdRoute: AlertIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

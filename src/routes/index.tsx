@@ -19,7 +19,7 @@ export const Route = createFileRoute("/")({
 
 interface Req {
   id: string; hospital: string; blood_group: string; units: number;
-  urgency: string; area: string | null; created_at: string;
+  urgency: string; area: string | null; created_at: string; requester_id: string;
 }
 
 function Index() {
