@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RequestRouteImport } from './routes/request'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as DonorsRouteImport } from './routes/donors'
@@ -16,6 +17,11 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AlertIdRouteImport } from './routes/alert.$id'
 
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RequestRoute = RequestRouteImport.update({
   id: '/request',
   path: '/request',
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/donors': typeof DonorsRoute
   '/profile': typeof ProfileRoute
   '/request': typeof RequestRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/alert/$id': typeof AlertIdRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/donors': typeof DonorsRoute
   '/profile': typeof ProfileRoute
   '/request': typeof RequestRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/alert/$id': typeof AlertIdRoute
 }
 export interface FileRoutesById {
@@ -70,13 +78,28 @@ export interface FileRoutesById {
   '/donors': typeof DonorsRoute
   '/profile': typeof ProfileRoute
   '/request': typeof RequestRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/alert/$id': typeof AlertIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/donors' | '/profile' | '/request' | '/alert/$id'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/donors'
+    | '/profile'
+    | '/request'
+    | '/reset-password'
+    | '/alert/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/donors' | '/profile' | '/request' | '/alert/$id'
+  to:
+    | '/'
+    | '/auth'
+    | '/donors'
+    | '/profile'
+    | '/request'
+    | '/reset-password'
+    | '/alert/$id'
   id:
     | '__root__'
     | '/'
@@ -84,6 +107,7 @@ export interface FileRouteTypes {
     | '/donors'
     | '/profile'
     | '/request'
+    | '/reset-password'
     | '/alert/$id'
   fileRoutesById: FileRoutesById
 }
@@ -93,11 +117,19 @@ export interface RootRouteChildren {
   DonorsRoute: typeof DonorsRoute
   ProfileRoute: typeof ProfileRoute
   RequestRoute: typeof RequestRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   AlertIdRoute: typeof AlertIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/request': {
       id: '/request'
       path: '/request'
@@ -149,6 +181,7 @@ const rootRouteChildren: RootRouteChildren = {
   DonorsRoute: DonorsRoute,
   ProfileRoute: ProfileRoute,
   RequestRoute: RequestRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   AlertIdRoute: AlertIdRoute,
 }
 export const routeTree = rootRouteImport
