@@ -82,7 +82,25 @@ function AuthPage() {
             />
           </div>
           <div>
-            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Password</label>
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Password</label>
+              {mode === "signin" && (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    if (!email) { toast.error("Enter your email first"); return; }
+                    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                      redirectTo: `${window.location.origin}/reset-password`,
+                    });
+                    if (error) toast.error(error.message);
+                    else toast.success("Password reset link sent to your email");
+                  }}
+                  className="text-[11px] font-bold text-primary hover:underline"
+                >
+                  Forgot password?
+                </button>
+              )}
+            </div>
             <input
               type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)}
               placeholder="At least 6 characters"
