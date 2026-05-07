@@ -90,6 +90,35 @@ function DonorsPage() {
         </div>
       </section>
 
+      <section className="px-5 mt-4 space-y-3">
+        <div>
+          <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Compatible for recipient</span>
+          <div className="flex gap-2 overflow-x-auto -mx-5 px-5 pb-2 mt-1.5">
+            <button onClick={() => setCompatFor("")}
+              className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold ${compatFor === "" ? "bg-primary text-primary-foreground" : "bg-card border border-border"}`}>Any</button>
+            {bloodGroups.map((g) => (
+              <button key={g} onClick={() => setCompatFor(g)}
+                className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold ${compatFor === g ? "bg-primary text-primary-foreground" : "bg-card border border-border"}`}>{g}</button>
+            ))}
+          </div>
+        </div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mr-1">Sort</span>
+          {([
+            ["recent", "Recent"],
+            ["donations", "Most donations"],
+            ["name", "Name A–Z"],
+          ] as const).map(([k, lbl]) => (
+            <button key={k} onClick={() => setSort(k)}
+              className={`px-3 py-1.5 rounded-full text-[11px] font-bold ${sort === k ? "bg-primary text-primary-foreground" : "bg-card border border-border"}`}>{lbl}</button>
+          ))}
+          <button onClick={() => setEligibleOnly((v) => !v)}
+            className={`ml-auto px-3 py-1.5 rounded-full text-[11px] font-bold ${eligibleOnly ? "bg-success text-success-foreground" : "bg-card border border-border"}`}>
+            Eligible only
+          </button>
+        </div>
+      </section>
+
       <section className="px-5 mt-4 pb-6 space-y-3">
         {loading ? (
           <div className="flex justify-center py-10"><Loader2 className="h-5 w-5 animate-spin text-primary" /></div>
