@@ -42,7 +42,14 @@ function DonorsPage() {
 
   const filtered = donors
     .filter((d) => filter === "All" || d.blood_group === filter)
-    .filter((d) => !search || d.name.toLowerCase().includes(search.toLowerCase()) || d.area?.toLowerCase().includes(search.toLowerCase()));
+    .filter((d) => !compatFor || (d.blood_group && isCompatible(d.blood_group, compatFor)))
+    .filter((d) => !eligibleOnly || (d.available && daysSince(d.last_donation_date) >= COOLDOWN_DAYS))
+    .filter((d) => !search || d.name.toLowerCase().includes(search.toLowerCase()) || d.area?.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => {
+      if (sort === "name") return (a.name || "").localeCompare(b.name || "");
+      if (sort === "donations") return (b.donation_count || 0) - (a.donation_count || 0);
+      return daysSince(a.last_donation_date) - daysSince(b.last_donation_date) > 0 ? -1 : 1;
+    });
 
   if (!user) return null;
 
