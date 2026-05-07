@@ -21,6 +21,8 @@ function ProfilePage() {
   const [form, setForm] = useState({
     name: "", blood_group: "" as BloodGroup | "",
     phone: "", area: "", last_donation_date: "", available: true, donation_count: 0,
+    age: "" as string, gender: "" as "" | "Male" | "Female" | "Other",
+    notify_push: true, notify_sms: false,
   });
 
   useEffect(() => { if (!authLoading && !user) nav({ to: "/auth" }); }, [user, authLoading, nav]);
