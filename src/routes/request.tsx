@@ -99,7 +99,19 @@ function RequestPage() {
           </div>
         </div>
 
-        <Field label="Hospital Name" value={hospital} onChange={setHospital} required placeholder="e.g. CPR Hospital" />
+        <div>
+          <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Hospital</label>
+          <div className="flex gap-2 overflow-x-auto -mx-5 px-5 mt-2 pb-1">
+            {["CPR Hospital", "Aster Aadhar", "D.Y. Patil Hospital", "Apple Saraswati", "City Hospital"].map((h) => (
+              <button key={h} type="button" onClick={() => setHospital(h)}
+                className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition-all ${
+                  hospital === h ? "bg-primary text-primary-foreground" : "bg-card border border-border"
+                }`}>{h}</button>
+            ))}
+          </div>
+          <input value={hospital} onChange={(e) => setHospital(e.target.value)} required placeholder="Or type hospital name"
+            className="w-full mt-2 px-4 py-3 rounded-xl bg-card border border-border text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary" />
+        </div>
         <Field label="Area / Locality" value={area} onChange={setArea} placeholder="e.g. Shivaji Peth, Kolhapur" />
         <Field label="Patient Info (optional)" value={patient} onChange={setPatient} placeholder="e.g. Trauma — RTA" />
         <Field label="Contact Person" value={contactName} onChange={setContactName} placeholder="e.g. Dr. Kamble" />
