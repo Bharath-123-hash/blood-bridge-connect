@@ -99,44 +99,56 @@ export type Database = {
       }
       profiles: {
         Row: {
+          age: number | null
           area: string | null
           available: boolean
           blood_group: Database["public"]["Enums"]["blood_group"] | null
           created_at: string
           donation_count: number
+          gender: string | null
           id: string
           last_donation_date: string | null
           lat: number | null
           lng: number | null
           name: string
+          notify_push: boolean
+          notify_sms: boolean
           phone: string | null
           updated_at: string
         }
         Insert: {
+          age?: number | null
           area?: string | null
           available?: boolean
           blood_group?: Database["public"]["Enums"]["blood_group"] | null
           created_at?: string
           donation_count?: number
+          gender?: string | null
           id: string
           last_donation_date?: string | null
           lat?: number | null
           lng?: number | null
           name?: string
+          notify_push?: boolean
+          notify_sms?: boolean
           phone?: string | null
           updated_at?: string
         }
         Update: {
+          age?: number | null
           area?: string | null
           available?: boolean
           blood_group?: Database["public"]["Enums"]["blood_group"] | null
           created_at?: string
           donation_count?: number
+          gender?: string | null
           id?: string
           last_donation_date?: string | null
           lat?: number | null
           lng?: number | null
           name?: string
+          notify_push?: boolean
+          notify_sms?: boolean
           phone?: string | null
           updated_at?: string
         }
