@@ -1,0 +1,1 @@
+ALTER TABLE public.emergency_requests DROP CONSTRAINT IF EXISTS emergency_requests_requester_id_fkey;
