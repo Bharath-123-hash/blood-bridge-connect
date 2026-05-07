@@ -202,6 +202,20 @@ function Field({ label, value, onChange, placeholder }: { label: string; value: 
   );
 }
 
+function ToggleRow({ label, desc, value, onChange }: { label: string; desc: string; value: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <div className="flex items-center gap-3 p-3">
+      <div className="flex-1">
+        <p className="font-bold text-sm">{label}</p>
+        <p className="text-[11px] text-muted-foreground" dangerouslySetInnerHTML={{ __html: desc }} />
+      </div>
+      <button onClick={() => onChange(!value)} type="button"
+        className={`relative h-7 w-12 rounded-full transition-colors ${value ? "bg-success" : "bg-muted"}`}>
+        <span className={`absolute top-1 h-5 w-5 rounded-full bg-card transition-transform ${value ? "translate-x-6" : "translate-x-1"}`} />
+      </button>
+    </div>
+  );
+
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-primary-foreground/15 backdrop-blur rounded-xl p-2.5 text-center">
