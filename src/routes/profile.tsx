@@ -149,6 +149,36 @@ function ProfilePage() {
             className="w-full mt-2 px-4 py-3 rounded-xl bg-card border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
         </div>
 
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Age</label>
+            <input type="number" min={18} max={65} value={form.age} onChange={(e) => setForm((f) => ({ ...f, age: e.target.value }))}
+              placeholder="18 - 65"
+              className="w-full mt-2 px-4 py-3 rounded-xl bg-card border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+          </div>
+          <div>
+            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Gender</label>
+            <div className="grid grid-cols-3 gap-1.5 mt-2">
+              {(["Male", "Female", "Other"] as const).map((g) => (
+                <button key={g} type="button" onClick={() => setForm((f) => ({ ...f, gender: g }))}
+                  className={`py-2.5 rounded-xl font-bold text-[11px] transition-all ${
+                    form.gender === g ? "bg-primary text-primary-foreground" : "bg-card border border-border"
+                  }`}>{g[0]}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Notifications</label>
+          <div className="mt-2 bg-card rounded-2xl border border-border divide-y divide-border">
+            <ToggleRow label="Push alerts" desc="Real-time SOS in &lt;5s"
+              value={form.notify_push} onChange={(v) => setForm((f) => ({ ...f, notify_push: v }))} />
+            <ToggleRow label="SMS fallback" desc="If push fails"
+              value={form.notify_sms} onChange={(v) => setForm((f) => ({ ...f, notify_sms: v }))} />
+          </div>
+        </div>
+
         <button onClick={save} disabled={saving}
           className="w-full py-4 rounded-2xl text-primary-foreground font-black flex items-center justify-center gap-2"
           style={{ background: "var(--gradient-emergency)", boxShadow: "var(--shadow-emergency)" }}>
