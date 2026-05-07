@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { PhoneFrame } from "@/components/PhoneFrame";
 import { useAuth } from "@/lib/auth-context";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Droplet, Loader2 } from "lucide-react";
 
