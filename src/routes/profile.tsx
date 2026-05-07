@@ -40,6 +40,10 @@ function ProfilePage() {
           last_donation_date: data.last_donation_date || "",
           available: data.available,
           donation_count: data.donation_count,
+          age: (data as any).age != null ? String((data as any).age) : "",
+          gender: ((data as any).gender as "Male" | "Female" | "Other") || "",
+          notify_push: (data as any).notify_push ?? true,
+          notify_sms: (data as any).notify_sms ?? false,
         });
       }
       setLoading(false);
@@ -57,7 +61,11 @@ function ProfilePage() {
       last_donation_date: form.last_donation_date || null,
       available: form.available,
       donation_count: form.donation_count,
-    }).eq("id", user.id);
+      age: form.age ? parseInt(form.age, 10) : null,
+      gender: form.gender || null,
+      notify_push: form.notify_push,
+      notify_sms: form.notify_sms,
+    } as any).eq("id", user.id);
     setSaving(false);
     if (error) toast.error(error.message);
     else toast.success("Profile saved!");
