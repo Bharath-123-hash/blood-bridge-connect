@@ -21,6 +21,8 @@ function ProfilePage() {
   const [form, setForm] = useState({
     name: "", blood_group: "" as BloodGroup | "",
     phone: "", area: "", last_donation_date: "", available: true, donation_count: 0,
+    age: "" as string, gender: "" as "" | "Male" | "Female" | "Other",
+    notify_push: true, notify_sms: false,
   });
 
   useEffect(() => { if (!authLoading && !user) nav({ to: "/auth" }); }, [user, authLoading, nav]);
@@ -38,6 +40,10 @@ function ProfilePage() {
           last_donation_date: data.last_donation_date || "",
           available: data.available,
           donation_count: data.donation_count,
+          age: (data as any).age != null ? String((data as any).age) : "",
+          gender: ((data as any).gender as "Male" | "Female" | "Other") || "",
+          notify_push: (data as any).notify_push ?? true,
+          notify_sms: (data as any).notify_sms ?? false,
         });
       }
       setLoading(false);
@@ -55,7 +61,11 @@ function ProfilePage() {
       last_donation_date: form.last_donation_date || null,
       available: form.available,
       donation_count: form.donation_count,
-    }).eq("id", user.id);
+      age: form.age ? parseInt(form.age, 10) : null,
+      gender: form.gender || null,
+      notify_push: form.notify_push,
+      notify_sms: form.notify_sms,
+    } as any).eq("id", user.id);
     setSaving(false);
     if (error) toast.error(error.message);
     else toast.success("Profile saved!");
@@ -139,6 +149,36 @@ function ProfilePage() {
             className="w-full mt-2 px-4 py-3 rounded-xl bg-card border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
         </div>
 
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Age</label>
+            <input type="number" min={18} max={65} value={form.age} onChange={(e) => setForm((f) => ({ ...f, age: e.target.value }))}
+              placeholder="18 - 65"
+              className="w-full mt-2 px-4 py-3 rounded-xl bg-card border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+          </div>
+          <div>
+            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Gender</label>
+            <div className="grid grid-cols-3 gap-1.5 mt-2">
+              {(["Male", "Female", "Other"] as const).map((g) => (
+                <button key={g} type="button" onClick={() => setForm((f) => ({ ...f, gender: g }))}
+                  className={`py-2.5 rounded-xl font-bold text-[11px] transition-all ${
+                    form.gender === g ? "bg-primary text-primary-foreground" : "bg-card border border-border"
+                  }`}>{g[0]}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Notifications</label>
+          <div className="mt-2 bg-card rounded-2xl border border-border divide-y divide-border">
+            <ToggleRow label="Push alerts" desc="Real-time SOS in &lt;5s"
+              value={form.notify_push} onChange={(v) => setForm((f) => ({ ...f, notify_push: v }))} />
+            <ToggleRow label="SMS fallback" desc="If push fails"
+              value={form.notify_sms} onChange={(v) => setForm((f) => ({ ...f, notify_sms: v }))} />
+          </div>
+        </div>
+
         <button onClick={save} disabled={saving}
           className="w-full py-4 rounded-2xl text-primary-foreground font-black flex items-center justify-center gap-2"
           style={{ background: "var(--gradient-emergency)", boxShadow: "var(--shadow-emergency)" }}>
@@ -158,6 +198,21 @@ function Field({ label, value, onChange, placeholder }: { label: string; value: 
       <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{label}</label>
       <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}
         className="w-full mt-2 px-4 py-3 rounded-xl bg-card border border-border text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary" />
+    </div>
+  );
+}
+
+function ToggleRow({ label, desc, value, onChange }: { label: string; desc: string; value: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <div className="flex items-center gap-3 p-3">
+      <div className="flex-1">
+        <p className="font-bold text-sm">{label}</p>
+        <p className="text-[11px] text-muted-foreground" dangerouslySetInnerHTML={{ __html: desc }} />
+      </div>
+      <button onClick={() => onChange(!value)} type="button"
+        className={`relative h-7 w-12 rounded-full transition-colors ${value ? "bg-success" : "bg-muted"}`}>
+        <span className={`absolute top-1 h-5 w-5 rounded-full bg-card transition-transform ${value ? "translate-x-6" : "translate-x-1"}`} />
+      </button>
     </div>
   );
 }

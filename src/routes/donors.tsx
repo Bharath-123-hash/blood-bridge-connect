@@ -4,7 +4,7 @@ import { Layout } from "@/components/Layout";
 import { BloodDrop } from "@/components/BloodDrop";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
-import { bloodGroups, BloodGroup, daysSince, COOLDOWN_DAYS } from "@/lib/blood";
+import { bloodGroups, BloodGroup, daysSince, COOLDOWN_DAYS, isCompatible } from "@/lib/blood";
 import { ArrowLeft, MapPin, Search, Filter, EyeOff, Phone, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/donors")({
@@ -22,6 +22,9 @@ function DonorsPage() {
   const { user, loading: authLoading } = useAuth();
   const [filter, setFilter] = useState<BloodGroup | "All">("All");
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState<"recent" | "name" | "donations">("recent");
+  const [eligibleOnly, setEligibleOnly] = useState(false);
+  const [compatFor, setCompatFor] = useState<BloodGroup | "">("");
   const [donors, setDonors] = useState<Donor[]>([]);
   const [revealed, setRevealed] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
@@ -39,7 +42,14 @@ function DonorsPage() {
 
   const filtered = donors
     .filter((d) => filter === "All" || d.blood_group === filter)
-    .filter((d) => !search || d.name.toLowerCase().includes(search.toLowerCase()) || d.area?.toLowerCase().includes(search.toLowerCase()));
+    .filter((d) => !compatFor || (d.blood_group && isCompatible(d.blood_group, compatFor)))
+    .filter((d) => !eligibleOnly || (d.available && daysSince(d.last_donation_date) >= COOLDOWN_DAYS))
+    .filter((d) => !search || d.name.toLowerCase().includes(search.toLowerCase()) || d.area?.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => {
+      if (sort === "name") return (a.name || "").localeCompare(b.name || "");
+      if (sort === "donations") return (b.donation_count || 0) - (a.donation_count || 0);
+      return daysSince(a.last_donation_date) - daysSince(b.last_donation_date) > 0 ? -1 : 1;
+    });
 
   if (!user) return null;
 
@@ -77,6 +87,35 @@ function DonorsPage() {
                 filter === g ? "bg-primary text-primary-foreground" : "bg-card border border-border text-foreground"
               }`}>{g}</button>
           ))}
+        </div>
+      </section>
+
+      <section className="px-5 mt-4 space-y-3">
+        <div>
+          <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Compatible for recipient</span>
+          <div className="flex gap-2 overflow-x-auto -mx-5 px-5 pb-2 mt-1.5">
+            <button onClick={() => setCompatFor("")}
+              className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold ${compatFor === "" ? "bg-primary text-primary-foreground" : "bg-card border border-border"}`}>Any</button>
+            {bloodGroups.map((g) => (
+              <button key={g} onClick={() => setCompatFor(g)}
+                className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold ${compatFor === g ? "bg-primary text-primary-foreground" : "bg-card border border-border"}`}>{g}</button>
+            ))}
+          </div>
+        </div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mr-1">Sort</span>
+          {([
+            ["recent", "Recent"],
+            ["donations", "Most donations"],
+            ["name", "Name A–Z"],
+          ] as const).map(([k, lbl]) => (
+            <button key={k} onClick={() => setSort(k)}
+              className={`px-3 py-1.5 rounded-full text-[11px] font-bold ${sort === k ? "bg-primary text-primary-foreground" : "bg-card border border-border"}`}>{lbl}</button>
+          ))}
+          <button onClick={() => setEligibleOnly((v) => !v)}
+            className={`ml-auto px-3 py-1.5 rounded-full text-[11px] font-bold ${eligibleOnly ? "bg-success text-success-foreground" : "bg-card border border-border"}`}>
+            Eligible only
+          </button>
         </div>
       </section>
 
