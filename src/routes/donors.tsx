@@ -4,7 +4,7 @@ import { Layout } from "@/components/Layout";
 import { BloodDrop } from "@/components/BloodDrop";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
-import { bloodGroups, BloodGroup, daysSince, COOLDOWN_DAYS } from "@/lib/blood";
+import { bloodGroups, BloodGroup, daysSince, COOLDOWN_DAYS, isCompatible } from "@/lib/blood";
 import { ArrowLeft, MapPin, Search, Filter, EyeOff, Phone, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/donors")({
