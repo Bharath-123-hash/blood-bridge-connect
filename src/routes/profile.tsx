@@ -215,6 +215,7 @@ function ToggleRow({ label, desc, value, onChange }: { label: string; desc: stri
       </button>
     </div>
   );
+}
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
