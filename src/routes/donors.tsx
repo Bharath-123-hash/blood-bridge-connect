@@ -22,6 +22,9 @@ function DonorsPage() {
   const { user, loading: authLoading } = useAuth();
   const [filter, setFilter] = useState<BloodGroup | "All">("All");
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState<"recent" | "name" | "donations">("recent");
+  const [eligibleOnly, setEligibleOnly] = useState(false);
+  const [compatFor, setCompatFor] = useState<BloodGroup | "">("");
   const [donors, setDonors] = useState<Donor[]>([]);
   const [revealed, setRevealed] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
