@@ -4,7 +4,7 @@ import { PhoneFrame } from "@/components/PhoneFrame";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Droplet, Loader2 } from "lucide-react";
+import { Droplet, Loader2, Eye, EyeOff } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
   component: AuthPage,
@@ -19,6 +19,7 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => { if (user) nav({ to: "/" }); }, [user, nav]);
 
@@ -101,11 +102,21 @@ function AuthPage() {
                 </button>
               )}
             </div>
-            <input
-              type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)}
-              placeholder="At least 6 characters"
-              className="w-full mt-1.5 px-4 py-3 rounded-xl bg-secondary text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary"
-            />
+            <div className="relative mt-1.5">
+              <input
+                type={showPassword ? "text" : "password"} required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)}
+                placeholder="At least 6 characters"
+                className="w-full px-4 py-3 pr-12 rounded-xl bg-secondary text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((s) => !s)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
           </div>
 
           <button
