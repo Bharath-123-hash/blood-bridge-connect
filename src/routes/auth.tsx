@@ -125,6 +125,27 @@ function AuthPage() {
             </div>
           </div>
 
+          {mode === "signup" && (
+            <div>
+              <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Confirm Password</label>
+              <div className="relative mt-1.5">
+                <input
+                  type={showConfirmPassword ? "text" : "password"} required minLength={6} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Re-enter password"
+                  className="w-full px-4 py-3 pr-12 rounded-xl bg-secondary text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((s) => !s)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                >
+                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+          )}
+
           <button
             type="submit" disabled={loading}
             className="mt-2 w-full py-4 rounded-2xl text-primary-foreground font-black tracking-wide flex items-center justify-center gap-2 disabled:opacity-60"
