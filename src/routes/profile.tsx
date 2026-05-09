@@ -17,6 +17,7 @@ export const Route = createFileRoute("/profile")({
 function ProfilePage() {
   const nav = useNavigate();
   const { user, loading: authLoading, signOut } = useAuth();
+  const { theme, toggle } = useTheme();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
