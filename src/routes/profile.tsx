@@ -5,8 +5,9 @@ import { BloodDrop } from "@/components/BloodDrop";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { bloodGroups, BloodGroup, COOLDOWN_DAYS, daysSince } from "@/lib/blood";
-import { ArrowLeft, Heart, LogOut, Loader2, Save } from "lucide-react";
+import { ArrowLeft, Heart, LogOut, Loader2, Save, Moon, Sun } from "lucide-react";
 import { toast } from "sonner";
+import { useTheme } from "@/lib/theme-context";
 
 export const Route = createFileRoute("/profile")({
   component: ProfilePage,
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/profile")({
 function ProfilePage() {
   const nav = useNavigate();
   const { user, loading: authLoading, signOut } = useAuth();
+  const { theme, toggle } = useTheme();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
@@ -124,6 +126,20 @@ function ProfilePage() {
           <button onClick={() => setForm((f) => ({ ...f, available: !f.available }))}
             className={`relative h-7 w-12 rounded-full transition-colors ${form.available ? "bg-success" : "bg-muted"}`}>
             <span className={`absolute top-1 h-5 w-5 rounded-full bg-card transition-transform ${form.available ? "translate-x-6" : "translate-x-1"}`} />
+          </button>
+        </div>
+
+        <div className="bg-card rounded-2xl border border-border p-4 flex items-center gap-3 mt-3">
+          <div className="h-12 w-12 rounded-xl flex items-center justify-center bg-accent">
+            {theme === "dark" ? <Moon className="h-5 w-5 text-accent-foreground" /> : <Sun className="h-5 w-5 text-accent-foreground" />}
+          </div>
+          <div className="flex-1">
+            <p className="font-bold text-sm">{theme === "dark" ? "Dark Mode" : "Light Mode"}</p>
+            <p className="text-[11px] text-muted-foreground">Tap to switch theme</p>
+          </div>
+          <button onClick={toggle} type="button"
+            className={`relative h-7 w-12 rounded-full transition-colors ${theme === "dark" ? "bg-primary" : "bg-muted"}`}>
+            <span className={`absolute top-1 h-5 w-5 rounded-full bg-card transition-transform ${theme === "dark" ? "translate-x-6" : "translate-x-1"}`} />
           </button>
         </div>
       </section>
