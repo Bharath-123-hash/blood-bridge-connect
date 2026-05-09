@@ -1,13 +1,14 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { BloodDrop } from "@/components/BloodDrop";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { bloodGroups, BloodGroup, COOLDOWN_DAYS, daysSince } from "@/lib/blood";
-import { ArrowLeft, Heart, LogOut, Loader2, Save, Moon, Sun } from "lucide-react";
+import { ArrowLeft, Heart, LogOut, Loader2, Save, Moon, Sun, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { useTheme } from "@/lib/theme-context";
+import { useIsAdmin } from "@/lib/use-role";
 
 export const Route = createFileRoute("/profile")({
   component: ProfilePage,
@@ -18,6 +19,7 @@ function ProfilePage() {
   const nav = useNavigate();
   const { user, loading: authLoading, signOut } = useAuth();
   const { theme, toggle } = useTheme();
+  const { isAdmin } = useIsAdmin();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
@@ -142,6 +144,22 @@ function ProfilePage() {
             <span className={`absolute top-1 h-5 w-5 rounded-full bg-card transition-transform ${theme === "dark" ? "translate-x-6" : "translate-x-1"}`} />
           </button>
         </div>
+
+        {isAdmin && (
+          <Link
+            to="/admin"
+            className="bg-card rounded-2xl border border-border p-4 flex items-center gap-3 mt-3 hover:bg-secondary/50 transition-colors"
+          >
+            <div className="h-12 w-12 rounded-xl flex items-center justify-center bg-primary/10">
+              <ShieldCheck className="h-5 w-5 text-primary" />
+            </div>
+            <div className="flex-1">
+              <p className="font-bold text-sm">Admin Dashboard</p>
+              <p className="text-[11px] text-muted-foreground">Manage donors, requests & analytics</p>
+            </div>
+            <span className="text-primary font-black">→</span>
+          </Link>
+        )}
       </section>
 
       <section className="px-5 mt-5 space-y-4">
