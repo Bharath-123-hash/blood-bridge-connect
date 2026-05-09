@@ -167,7 +167,7 @@ function Overview() {
       setStats({
         donors: donors.length,
         active: requests.filter((r) => r.status === "open" || r.status === "approved").length,
-        completed: responses.filter((r) => r.status === "donated").length,
+        completed: responses.filter((r) => r.status === "accepted").length,
         groups: Object.values(counts).filter((n) => n > 0).length,
       });
       setGroupData(bloodGroups.map((g) => ({ group: g, count: counts[g] })));
@@ -268,7 +268,7 @@ function RequestsTab() {
   const setStatusFor = async (id: string, next: string) => {
     const { error } = await supabase
       .from("emergency_requests")
-      .update({ status: next })
+      .update({ status: next as "open" | "approved" | "rejected" | "fulfilled" | "cancelled" })
       .eq("id", id);
     if (error) {
       toast.error(error.message);
