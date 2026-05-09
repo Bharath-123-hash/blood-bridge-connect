@@ -128,6 +128,20 @@ function ProfilePage() {
             <span className={`absolute top-1 h-5 w-5 rounded-full bg-card transition-transform ${form.available ? "translate-x-6" : "translate-x-1"}`} />
           </button>
         </div>
+
+        <div className="bg-card rounded-2xl border border-border p-4 flex items-center gap-3 mt-3">
+          <div className="h-12 w-12 rounded-xl flex items-center justify-center bg-accent">
+            {theme === "dark" ? <Moon className="h-5 w-5 text-accent-foreground" /> : <Sun className="h-5 w-5 text-accent-foreground" />}
+          </div>
+          <div className="flex-1">
+            <p className="font-bold text-sm">{theme === "dark" ? "Dark Mode" : "Light Mode"}</p>
+            <p className="text-[11px] text-muted-foreground">Tap to switch theme</p>
+          </div>
+          <button onClick={toggle} type="button"
+            className={`relative h-7 w-12 rounded-full transition-colors ${theme === "dark" ? "bg-primary" : "bg-muted"}`}>
+            <span className={`absolute top-1 h-5 w-5 rounded-full bg-card transition-transform ${theme === "dark" ? "translate-x-6" : "translate-x-1"}`} />
+          </button>
+        </div>
       </section>
 
       <section className="px-5 mt-5 space-y-4">
