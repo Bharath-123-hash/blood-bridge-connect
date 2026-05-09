@@ -5,8 +5,9 @@ import { BloodDrop } from "@/components/BloodDrop";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { bloodGroups, BloodGroup, COOLDOWN_DAYS, daysSince } from "@/lib/blood";
-import { ArrowLeft, Heart, LogOut, Loader2, Save } from "lucide-react";
+import { ArrowLeft, Heart, LogOut, Loader2, Save, Moon, Sun } from "lucide-react";
 import { toast } from "sonner";
+import { useTheme } from "@/lib/theme-context";
 
 export const Route = createFileRoute("/profile")({
   component: ProfilePage,
