@@ -65,13 +65,23 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 import { AuthProvider } from "@/lib/auth-context";
+import { ThemeProvider } from "@/lib/theme-context";
+import { useAutoGeolocation } from "@/lib/use-geolocation";
 import { Toaster } from "sonner";
+
+function GeoBootstrap() {
+  useAutoGeolocation();
+  return null;
+}
 
 function RootComponent() {
   return (
-    <AuthProvider>
-      <Outlet />
-      <Toaster position="top-center" richColors closeButton />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <GeoBootstrap />
+        <Outlet />
+        <Toaster position="top-center" richColors closeButton />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
